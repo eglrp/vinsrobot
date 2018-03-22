@@ -90,6 +90,20 @@ int main(int argc,char **argv)
     ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::STEREO,true);
     ORB_SLAM2::ConfigParam config(argv[2]);
 
+    double imageMsgDelaySec = config.GetImageDelayToIMU();
+    ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
+    ros::NodeHandle nh;
+    ros::Subscriber imagesub;
+    ros::Subscriber imusub;
+    if(ORB_SLAM2::ConfigParam::GetRealTimeFlag())
+    {
+         imagesub = nh.subscribe(config._imageTopic, /*200*/ 2, &ORBVIO::MsgSynchronizer::imageCallback, &msgsync);
+         imusub = nh.subscribe(config._imuTopic, 200, &ORBVIO::MsgSynchronizer::imuCallback, &msgsync);
+    }
+    sensor_msgs::ImageConstPtr imageMsg;
+    std::vector<sensor_msgs::ImuConstPtr> vimuMsg;
+
+
 }
 
 void ImageGrabber::GrabStereo(const sensor_msgs::ImageConstPtr& msgLeft,const sensor_msgs::ImageConstPtr& msgRight)
