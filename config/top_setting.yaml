@@ -3,10 +3,10 @@
 # This file lists paths of all other configuration files.
 # Modify these paths according to your specific machine.
 
-control_setting:"/home/exbot/Project/robot/config/control_setting.yaml"
+control_setting:"/home/zc/catkin_car/src/vinsrobot/config/control_setting.yaml"
 
-orb_setting_320:"/home/exbot/Project/robot/config/orb_setting_320.yaml"
+orb_setting_320:"/home/zc/catkin_car/src/vinsrobot/config/orb_setting_320.yaml"
 
-orb_setting_640:"/home/exbot/Project/robot/config/orb_setting_640.yaml"
+orb_setting_640:"/home/zc/catkin_car/src/vinsrobot/config/orb_setting_640.yaml"
 
-sensor_setting:"/home/exbot/Project/robot/config/sensor_setting.yaml"
+sensor_setting:"/home/zc/catkin_car/src/vinsrobot/config/sensor_setting.yaml"
