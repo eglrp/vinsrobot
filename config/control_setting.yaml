@@ -1,0 +1,28 @@
+%YAML:1.0
+
+# This file specifies necessary control params, such as obstacle avoidance strategy, PID params, speed limit, and so on.
+
+## Obatacle Avoidance
+## 0 means virtual force method, default
+## 1 means avoiding method
+oaStrategy: 1
+
+## Fusion Control
+oaWeight: 0.8
+
+## PID Controller
+## TODO: make PID params be adaptive to distance to target or something else
+ParamPidP: 1.0
+ParamPidD: 0.0
+
+## Speed Limit
+maxSpeed: 0.8            # Unit: m/s
+ParamVel: 0.3            # Unit: m/s
+
+## Filter window size
+ControlCacheSize: 15
+
+ReachedThreshold: 1.0    # Unit: m
+
+## Execution
+delayTimeSeconds: 3      # Unit: second

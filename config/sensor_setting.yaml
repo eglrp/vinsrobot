@@ -1,0 +1,17 @@
+%YAML:1.0
+
+# This file specifies necessary params of stereo camera and hokuyo laser.
+
+# Camera
+CamType: "s2c38"
+
+Camera.Width: 640
+Camera.Height: 480
+
+# Sereo Vision
+stereo_flag: 0  # default is 0, if set to 1, stereo matching module will work
+pcd_scale: 1.0  # default is 1.0f, meaning 100% point cloud are reserved
+
+# Laser
+interestScanRadius: 10000  # Unit: mm
+interestOaRadius: 1600     # Unit: mm

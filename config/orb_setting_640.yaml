@@ -1,0 +1,102 @@
+%YAML:1.0
+
+## This file contains relevant map info of ORB_SLAM2 and runtime setting of ORB_SLAM2.
+
+#----------------------------------------------------------------------------------------------------------
+# Map-relevant File Paths. Adjust them according to real drive postitions
+#----------------------------------------------------------------------------------------------------------
+
+orb_vocabulary:"/home/exbot/Project/robot/Thirdparty/Vocabulary/ORBvoc.bin"  # ORB Vocabulary
+
+# ORB_SLAM2 Map
+map_file_name:"/home/exbot/Project/robot/map_data/hall/hall_0803.bin"
+map_file_updated_name: "tmp.bin"
+
+# ORB_SLAM2 KeyFrame Pose Sequene(format: timestamp x y z qx qy qz qw)
+raw_path_file_name: "/home/exbot/Project/robot/map_data/hall/tmp.txt"
+
+# Waypoint Sequence Generated from above Pose Sequence
+raw_path_file_name: "/home/exbot/Project/robot/map_data/hall/tmp.txt"
+sample_step: 3
+
+#--------------------------------------------------------------------------------------------
+# Camera Parameters. Adjust them according to real context
+#--------------------------------------------------------------------------------------------
+
+Camera.width: 640
+Camera.height: 480
+
+# Camera calibration and distortion parameters (OpenCV convention)
+# Serial: bb2-08s2c38
+# Image Size(in pixel): 640x480
+Camera.fx: 491.66
+Camera.fy: 491.66
+Camera.cx: 321.94
+Camera.cy: 245.76
+
+# Serial: bb2-08s2c25
+# Image Size(in pixel): 640x480
+#Camera.fx: 278.69
+#Camera.fy: 278.69
+#Camera.cx: 317.00
+#Camera.cy: 246.89
+
+# Because rectified images are provided, these params are not needed here.
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+Camera.k3: 0.0
+
+# Camera frames per second
+Camera.fps: 20.0
+
+# stereo baseline times fx
+# Serial: bb2-08s2c38
+# Image Size(in pixel): 640x480
+Camera.bf: 58.9992
+
+# Serial: bb2-08s2c25
+# Image Size(in pixel): 640x480
+#Camera.bf: 33.44
+
+# Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+Camera.RGB: 0
+
+# Close/Far threshold. Baseline times.
+# This value times baseline to get the threshold, e.g. 0.12 m x 35 = 4.2 m
+ThDepth: 35
+
+#--------------------------------------------------------------------------------------------
+# ORB Parameters
+#--------------------------------------------------------------------------------------------
+
+# ORB Extractor: Number of features per image
+ORBextractor.nFeatures: 1000
+
+# ORB Extractor: Scale factor between levels in the scale pyramid
+ORBextractor.scaleFactor: 1.2
+
+# ORB Extractor: Number of levels in the scale pyramid
+ORBextractor.nLevels: 8
+
+# ORB Extractor: Fast threshold
+# Image is divided in a grid. At each cell FAST are extracted imposing a minimum response.
+# Firstly we impose iniThFAST. If no corners are detected we impose a lower value minThFAST
+# You can lower these values if your images have low contrast
+ORBextractor.iniThFAST: 20
+ORBextractor.minThFAST: 7
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 0.05
+Viewer.KeyFrameLineWidth: 1
+Viewer.GraphLineWidth: 0.9
+Viewer.PointSize:2
+Viewer.CameraSize: 0.08
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -0.7
+Viewer.ViewpointZ: -1.8
+Viewer.ViewpointF: 500
