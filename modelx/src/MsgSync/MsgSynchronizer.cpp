@@ -168,7 +168,52 @@ void MsgSynchronizer::addImuMsg(const sensor_msgs::ImuConstPtr &imumsg)
 
 }
 
-void MsgSynchronizer::addImageMsg(const sensor_msgs::ImageConstPtr &imgmsg)
+void MsgSynchronizer::addleftImageMsg(const sensor_msgs::ImageConstPtr &imgmsg)
+{
+    unique_lock<mutex> lock(_mutexImageQueue);
+
+    if(_imageMsgDelaySec >= 0)
+    {
+        // if there's no imu messages, don't add image
+        if(_status == NOTINIT)
+            return;
+        else if(_status == INIT)
+        {
+            // ignore all image messages with no imu messages between them
+            // only add below images
+            if(imgmsg->header.stamp.toSec() - _imageMsgDelaySec > _imuMsgTimeStart.toSec())
+            {
+                _imageMsgQueue.push(imgmsg);
+                _status = NORMAL;
+            }
+        }
+        else
+        {
+            // push message into queue
+            _imageMsgQueue.push(imgmsg);
+        }
+    }
+    else {  // start by image message
+        if(_status == NOTINIT)
+        {
+            _imuMsgTimeStart = imgmsg->header.stamp;
+            _status = INIT;
+        }
+        else
+        {   // no image data if there's no imu message
+            _imageMsgQueue.push(imgmsg);
+        }
+
+    }
+
+    if(ORB_SLAM2::ConfigParam::GetRealTimeFlag())
+    {
+        // Ignore earlier frames
+        if(_imageMsgQueue.size()>2)
+            _imageMsgQueue.pop();
+    }
+}
+void MsgSynchronizer::addrightImageMsg(const sensor_msgs::ImageConstPtr &imgmsg)
 {
     unique_lock<mutex> lock(_mutexImageQueue);
 
@@ -214,9 +259,13 @@ void MsgSynchronizer::addImageMsg(const sensor_msgs::ImageConstPtr &imgmsg)
 }
 
 
-void MsgSynchronizer::imageCallback(const sensor_msgs::ImageConstPtr& msg)
+void MsgSynchronizer::imageleftCallback(const sensor_msgs::ImageConstPtr& msg)
 {
-    addImageMsg(msg);
+    addleftImageMsg(msg);
+}
+void MsgSynchronizer::imagerightCallback(const sensor_msgs::ImageConstPtr& msg)
+{
+    addrightImageMsg(msg);
 }
 
 void MsgSynchronizer::imuCallback(const sensor_msgs::ImuConstPtr &msg)

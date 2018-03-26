@@ -104,19 +104,139 @@ int main(int argc,char **argv)
     double imageMsgDelaySec = config.GetImageDelayToIMU();
     ORBVIO::MsgSynchronizer msgsync(imageMsgDelaySec);
     ros::NodeHandle nh;
-    ros::Subscriber imagesub;
+    ros::Subscriber imagesub0;
+    ros::Subscriber imagesub1;
     ros::Subscriber imusub;
     if(ORB_SLAM2::ConfigParam::GetRealTimeFlag())
     {
-         imagesub = nh.subscribe(config._imageTopic, /*200*/ 2, &ORBVIO::MsgSynchronizer::imageCallback, &msgsync);
+         imagesub0 = nh.subscribe(config._imageLeftTopic, /*200*/ 2, &ORBVIO::MsgSynchronizer::imageleftCallback, &msgsync);
+         imagesub1 = nh.subscribe(config._imageRightTopic, /*200*/ 2, &ORBVIO::MsgSynchronizer::imagerightCallback, &msgsync);
          imusub = nh.subscribe(config._imuTopic, 200, &ORBVIO::MsgSynchronizer::imuCallback, &msgsync);
     }
-    sensor_msgs::ImageConstPtr imageMsg;
+    sensor_msgs::ImageConstPtr imageLeftMsg;
+    sensor_msgs::ImageConstPtr imageRightMsg;
     std::vector<sensor_msgs::ImuConstPtr> vimuMsg;
+
+    // 3dm imu output per g. 1g=9.80665 according to datasheet
+    const double g3dm = 9.80665;
+    const bool bAccMultiply98 = config.GetAccMultiply9p8();
+
+    ros::Rate r(1000);
+
+    if(!ORB_SLAM2::ConfigParam::GetRealTimeFlag())
+    {
+        ROS_WARN("Run not-realtime");
+
+        std::string bagfile = config._bagfile;
+        rosbag::Bag bag;
+        bag.open(bagfile,rosbag::bagmode::Read);
+
+        std::vector<std::string> topics;
+        std::string imutopic = config._imuTopic;
+        std::string imagelefttopic = config._imageLeftTopic;
+        std::string imagerighttopic = config._imageRightTopic;
+        topics.push_back(imagelefttopic);
+        topics.push_back(imagerighttopic);
+        topics.push_back(imutopic);
+
+        rosbag::View view(bag, rosbag::TopicQuery(topics));
+        //while(ros::ok())
+        BOOST_FOREACH(rosbag::MessageInstance const m, view)
+        {
+            sensor_msgs::ImuConstPtr simu = m.instantiate<sensor_msgs::Imu>();
+            if(simu!=NULL)
+                msgsync.imuCallback(simu);
+            sensor_msgs::ImageConstPtr simage = m.instantiate<sensor_msgs::Image>();
+            if(simage!=NULL)
+                msgsync.imageleftCallback(simage);
+            if(simage!=NULL)
+                msgsync.imagerightCallback(simage);
+            bool bdata = msgsync.getRecentMsgs(imageLeftMsg,vimuMsg);
+
+            if(bdata)
+            {
+                std::vector<ORB_SLAM2::IMUData> vimuData;
+                //ROS_INFO("image time: %.3f",imageMsg->header.stamp.toSec());
+                for(unsigned int i=0;i<vimuMsg.size();i++)
+                {
+                    sensor_msgs::ImuConstPtr imuMsg = vimuMsg[i];
+                    double ax = imuMsg->linear_acceleration.x;
+                    double ay = imuMsg->linear_acceleration.y;
+                    double az = imuMsg->linear_acceleration.z;
+                    if(bAccMultiply98)
+                    {
+                        ax *= g3dm;
+                        ay *= g3dm;
+                        az *= g3dm;
+                    }
+                    ORB_SLAM2::IMUData imudata(imuMsg->angular_velocity.x,imuMsg->angular_velocity.y,imuMsg->angular_velocity.z,
+                                    ax,ay,az,imuMsg->header.stamp.toSec());
+                    vimuData.push_back(imudata);
+                    //ROS_INFO("imu time: %.3f",vimuMsg[i]->header.stamp.toSec());
+                }
+
+                // Copy the ros image message to cv::Mat.
+                cv_bridge::CvImageConstPtr cv_ptr0;
+                cv_bridge::CvImageConstPtr cv_ptr1;
+                try
+                {
+                    cv_ptr0 = cv_bridge::toCvShare(imageLeftMsg);
+                    cv_ptr1 = cv_bridge::toCvShare(imageRightMsg);
+                }
+                catch (cv_bridge::Exception& e)
+                {
+                    ROS_ERROR("cv_bridge exception: %s", e.what());
+                    return -1;
+                }
+
+                // Consider delay of image message
+                //SLAM.TrackMonocular(cv_ptr->image, imageMsg->header.stamp.toSec() - imageMsgDelaySec);
+                cv::Mat iml = cv_ptr0->image.clone();
+                cv::Mat imr = cv_ptr1->image.clone();
+                {
+                    // To test relocalization
+                    static double startT=-1;
+                    if(startT<0)
+                        startT = imageMsg->header.stamp.toSec();
+                    // Below to test relocalizaiton
+                    //if(imageMsg->header.stamp.toSec() > startT+25 && imageMsg->header.stamp.toSec() < startT+25.3)
+                    if(imageMsg->header.stamp.toSec() < startT+config._testDiscardTime)
+                        im = cv::Mat::zeros(im.rows,im.cols,im.type());
+                }
+                SLAM.TrackMonoVI(im, vimuData, imageMsg->header.stamp.toSec() - imageMsgDelaySec);
+                //SLAM.TrackMonoVI(cv_ptr->image, vimuData, imageMsg->header.stamp.toSec() - imageMsgDelaySec);
+                //cv::imshow("image",cv_ptr->image);
+
+                // Wait local mapping end.
+                bool bstop = false;
+                while(!SLAM.bLocalMapAcceptKF())
+                {
+                    if(!ros::ok())
+                    {
+                        bstop=true;
+                    }
+                };
+                if(bstop)
+                    break;
+
+            }
+
+            //cv::waitKey(1);
+
+            ros::spinOnce();
+            r.sleep();
+            if(!ros::ok())
+                break;
+        }
+
+        }
 
     while(keepRunning)
     {
       ros::spinOnce();
+      r.sleep();
+      if(!ros::ok())
+        break;
     }
 
     SLAM.Shutdown();

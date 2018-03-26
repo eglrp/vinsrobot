@@ -25,7 +25,8 @@ public:
     ~MsgSynchronizer();
 
     // add messages in callbacks
-    void addImageMsg(const sensor_msgs::ImageConstPtr &imgmsg);
+    void addleftImageMsg(const sensor_msgs::ImageConstPtr &imgleftmsg);
+    void addrightImageMsg(const sensor_msgs::ImageConstPtr &imgrightmsg);
     void addImuMsg(const sensor_msgs::ImuConstPtr &imumsg);
 
     // loop in main function to handle all messages
@@ -34,7 +35,8 @@ public:
     void clearMsgs(void);
 
     // for message callback if needed
-    void imageCallback(const sensor_msgs::ImageConstPtr& msg);
+    void imageleftCallback(const sensor_msgs::ImageConstPtr& msg);
+    void imagerightCallback(const sensor_msgs::ImageConstPtr& msg);
     void imuCallback(const sensor_msgs::ImuConstPtr& msg);
 
     //

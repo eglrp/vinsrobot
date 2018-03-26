@@ -32,9 +32,11 @@ ConfigParam::ConfigParam(std::string configfile)
     fSettings["bagfile"] >> _bagfile;
     std::cout<<"open rosbag: "<<_bagfile<<std::endl;
     fSettings["imutopic"] >> _imuTopic;
-    fSettings["imagetopic"] >> _imageTopic;
+    fSettings["imagelefttopic"] >> _imageLeftTopic;
+    fSettings["imagerighttopic"] >> _imageRightTopic;s
     std::cout<<"imu topic: "<<_imuTopic<<std::endl;
-    std::cout<<"image topic: "<<_imageTopic<<std::endl;
+    std::cout<<"imageleft topic: "<<_imageLeftTopic<<std::endl;
+    std::cout<<"imageright topic: "<<_imageRightTopic<<std::endl;
 
     _LocalWindowSize = fSettings["LocalMapping.LocalWindowSize"];
     std::cout<<"local window size: "<<_LocalWindowSize<<std::endl;
