@@ -22,6 +22,15 @@
 
 using namespace std;
 
+static volatile int keepRunning = 1;
+void sig_handler( int sig )
+{
+    if ( sig == SIGINT )
+    {
+        keepRunning = 0;
+    }
+}
+
 #define DEF_320x240 0
 
 class ImageGrabber
@@ -40,6 +49,8 @@ int main(int argc,char **argv)
 {
     ros::init(argc,argv,"Stereo_mapping");
     ros::start();
+
+    signal( SIGINT, sig_handler );
 
     if ( 2 != argc )
     {
@@ -103,7 +114,20 @@ int main(int argc,char **argv)
     sensor_msgs::ImageConstPtr imageMsg;
     std::vector<sensor_msgs::ImuConstPtr> vimuMsg;
 
+    while(keepRunning)
+    {
+      ros::spinOnce();
+    }
 
+    SLAM.Shutdown();
+
+    std::string map_file_updated_name = orb_settig_640["map_file_updated_name"];
+    SLAM.SaveMap( map_file_updated_name );
+
+    std::string path_to_save = orb_setting_640["path_to_save"];
+    SLAM.SaveKeyFrameTrajectoryTUM( path_to_save );
+
+    return 0;
 }
 
 void ImageGrabber::GrabStereo(const sensor_msgs::ImageConstPtr& msgLeft,const sensor_msgs::ImageConstPtr& msgRight)
