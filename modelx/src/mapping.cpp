@@ -229,15 +229,76 @@ int main(int argc,char **argv)
                 break;
         }
 
-        }
-
-    while(keepRunning)
-    {
-      ros::spinOnce();
-      r.sleep();
-      if(!ros::ok())
-        break;
     }
+    else
+    {
+        ROS_WARN("Run realtime");
+        while( keepRunning )
+        {
+            bool bdata = msgsync.getRecentMsgs(imageMsg,vimuMsg);
+
+            if(bdata)
+            {
+                std::vector<ORB_SLAM2::IMUData> vimuData;
+                //ROS_INFO("image time: %.3f",imageMsg->header.stamp.toSec());
+                for(unsigned int i=0;i<vimuMsg.size();i++)
+                {
+                    sensor_msgs::ImuConstPtr imuMsg = vimuMsg[i];
+                    double ax = imuMsg->linear_acceleration.x;
+                    double ay = imuMsg->linear_acceleration.y;
+                    double az = imuMsg->linear_acceleration.z;
+                    if(bAccMultiply98)
+                    {
+                        ax *= g3dm;
+                        ay *= g3dm;
+                        az *= g3dm;
+                    }
+                    ORB_SLAM2::IMUData imudata(imuMsg->angular_velocity.x,imuMsg->angular_velocity.y,imuMsg->angular_velocity.z,
+                                    ax,ay,az,imuMsg->header.stamp.toSec());
+                    vimuData.push_back(imudata);
+                    //ROS_INFO("imu time: %.3f",vimuMsg[i]->header.stamp.toSec());
+                }
+
+                // Copy the ros image message to cv::Mat.
+                cv_bridge::CvImageConstPtr cv_ptr;
+                try
+                {
+                    cv_ptr = cv_bridge::toCvShare(imageMsg);
+                }
+                catch (cv_bridge::Exception& e)
+                {
+                    ROS_ERROR("cv_bridge exception: %s", e.what());
+                    return -1;
+                }
+
+                // Consider delay of image message
+                //SLAM.TrackMonocular(cv_ptr->image, imageMsg->header.stamp.toSec() - imageMsgDelaySec);
+                cv::Mat im = cv_ptr->image.clone();
+                {
+                    // To test relocalization
+                    static double startT=-1;
+                    if(startT<0)
+                        startT = imageMsg->header.stamp.toSec();
+                    // Below to test relocalizaiton
+                    //if(imageMsg->header.stamp.toSec() > startT+25 && imageMsg->header.stamp.toSec() < startT+25.3)
+                    if(imageMsg->header.stamp.toSec() < startT+config._testDiscardTime)
+                        im = cv::Mat::zeros(im.rows,im.cols,im.type());
+                }
+                SLAM.TrackMonoVI(im, vimuData, imageMsg->header.stamp.toSec() - imageMsgDelaySec);
+                //SLAM.TrackMonoVI(cv_ptr->image, vimuData, imageMsg->header.stamp.toSec() - imageMsgDelaySec);
+                //cv::imshow("image",cv_ptr->image);
+
+            }
+
+            //cv::waitKey(1);
+
+            ros::spinOnce();
+            r.sleep();
+            if(!ros::ok())
+                break;
+        }
+    }
+
 
     SLAM.Shutdown();
 
@@ -247,6 +308,7 @@ int main(int argc,char **argv)
     std::string path_to_save = orb_setting_640["path_to_save"];
     SLAM.SaveKeyFrameTrajectoryTUM( path_to_save );
 
+    ros::shutdown();
     return 0;
 }
 
