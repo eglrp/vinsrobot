@@ -42,3 +42,14 @@ ${PROJECT_SOURCE_DIR}/../Thirdparty/DBoW2/lib/libDBoW2.so
 ${PROJECT_SOURCE_DIR}/../Thirdparty/g2o/lib/libg2o.so
 ${PROJECT_SOURCE_DIR}/../lib/libORB_SLAM2.so
 )
+
+# Node for monocular camera
+#add_executable(ros_mono_vio
+#src/ros_mono_vio.cpp
+#src/MsgSync/MsgSynchronizer.cpp
+#src/MsgSync/MsgSynchronizer.h
+#)
+
+#target_link_libraries(ros_mono_vio
+#${LIBS}
+#)
