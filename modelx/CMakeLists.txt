@@ -6,6 +6,8 @@ set(CMAKE_CXX_FLAGS "-std=c++11")
 #-DEIGEN_USE_MKL_ALL")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g")
 
+LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../cmake_modules)
+
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     std_msgs
@@ -25,28 +27,36 @@ find_package(Eigen3 REQUIRED)
 find_package(Pangolin REQUIRED)
 #find_package(Ceres REQUIRED)
 
-include_directories(
-${PROJECT_SOURCE_DIR}
-${PROJECT_SOURCE_DIR}/../
-${PROJECT_SOURCE_DIR}/../src
-${PROJECT_SOURCE_DIR}/../include
-${Pangolin_INCLUDE_DIRS}
+
+
+# Describe catkin Project
+catkin_package()
+
+# Include dirs
+INCLUDE_DIRECTORIES(
+  ${PROJECT_SOURCE_DIR}
+  ${PROJECT_SOURCE_DIR}/../../../
+  ${PROJECT_SOURCE_DIR}/../../../src
+  ${PROJECT_SOURCE_DIR}/../../../include
+  ${Pangolin_INCLUDE_DIRS}
 )
 
+# Set link libraries
 set(LIBS
-${OpenCV_LIBS}
-${EIGEN3_LIBS}
-${Pangolin_LIBRARIES}
-${PROJECT_SOURCE_DIR}/../Thirdparty/DBoW2/lib/libDBoW2.so
-${PROJECT_SOURCE_DIR}/../Thirdparty/g2o/lib/libg2o.so
-${PROJECT_SOURCE_DIR}/../lib/libORB_SLAM2.so
+    ${OpenCV_LIBS}
+    ${EIGEN3_LIBS}
+    ${Pangolin_LIBRARIES}
+    ${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so
+    ${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so
+    ${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so
 )
 
-##add_executable(mapping
-##src/mapping.cpp
-##src/MsgSync/MsgSynchronizer.cpp
-##src/MsgSync/MsgSynchronizer.h
-##)
+
+#add_executable(mapping
+#src/mapping.cpp
+#src/MsgSync/MsgSynchronizer.cpp
+#src/MsgSync/MsgSynchronizer.h
+#)
 
 #target_link_libraries(mapping
 #${LIBS}
@@ -54,8 +64,6 @@ ${PROJECT_SOURCE_DIR}/../lib/libORB_SLAM2.so
 #Node for monocular camera
 add_executable(ros_mono_vio
 src/ros_mono_vio.cpp
-src/MsgSync/MsgSynchronizer.cpp
-src/MsgSync/MsgSynchronizer.h
 )
 
 target_link_libraries(ros_mono_vio
