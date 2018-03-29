@@ -42,6 +42,8 @@ ${PROJECT_SOURCE_DIR}/../Thirdparty/g2o/lib/libg2o.so
 ${PROJECT_SOURCE_DIR}/../lib/libORB_SLAM2.so
 )
 
+catkin_package()
+
 ##add_executable(mapping
 ##src/mapping.cpp
 ##src/MsgSync/MsgSynchronizer.cpp
