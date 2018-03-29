@@ -1,5 +1,5 @@
 #include "MsgSynchronizer.h"
-#include "../../src/IMU/configparam.h"
+#include "../../../src/IMU/configparam.h"
 
 namespace ORBVIO
 {
