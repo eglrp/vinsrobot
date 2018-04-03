@@ -28,7 +28,7 @@
 #include "KeyFrameDatabase.h"
 
 #include <mutex>
-#include "IMU/configparam.h"
+#include "../src/IMU/configparam.h"
 
 
 namespace ORB_SLAM2

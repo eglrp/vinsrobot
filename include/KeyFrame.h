@@ -22,17 +22,17 @@
 #define KEYFRAME_H
 
 #include "MapPoint.h"
-#include "Thirdparty/DBoW2/DBoW2/BowVector.h"
-#include "Thirdparty/DBoW2/DBoW2/FeatureVector.h"
+#include "../Thirdparty/DBoW2/DBoW2/BowVector.h"
+#include "../Thirdparty/DBoW2/DBoW2/FeatureVector.h"
 #include "ORBVocabulary.h"
 #include "ORBextractor.h"
 #include "Frame.h"
 #include "KeyFrameDatabase.h"
 
 #include <mutex>
-#include "IMU/imudata.h"
-#include "IMU/NavState.h"
-#include "IMU/IMUPreintegrator.h"
+#include "../src/IMU/imudata.h"
+#include "../src/IMU/NavState.h"
+#include "../src/IMU/IMUPreintegrator.h"
 
 namespace ORB_SLAM2
 {

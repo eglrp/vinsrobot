@@ -38,8 +38,8 @@
 #include "MapDrawer.h"
 #include "System.h"
 
-#include "IMU/imudata.h"
-#include "IMU/configparam.h"
+#include "../src/IMU/imudata.h"
+#include "../src/IMU/configparam.h"
 
 #include <mutex>
 

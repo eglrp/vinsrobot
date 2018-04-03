@@ -79,7 +79,7 @@ int main(int argc, char **argv)
     ros::Subscriber imusub;
     if(ORB_SLAM2::ConfigParam::GetRealTimeFlag())
     {
-        imagesub = nh.subscribe(config._imageTopic, /*200*/ 2, &ORBVIO::MsgSynchronizer::imageCallback, &msgsync);
+        imagesub = nh.subscribe(config._imageLeftTopic, /*200*/ 2, &ORBVIO::MsgSynchronizer::imageleftCallback, &msgsync);
         imusub = nh.subscribe(config._imuTopic, 200, &ORBVIO::MsgSynchronizer::imuCallback, &msgsync);
     }
     sensor_msgs::ImageConstPtr imageMsg;
@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 
     std::vector<std::string> topics;
     std::string imutopic = config._imuTopic;
-    std::string imagetopic = config._imageTopic;
+    std::string imagetopic = config._imageLeftTopic;
     topics.push_back(imagetopic);
     topics.push_back(imutopic);
 
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
             msgsync.imuCallback(simu);
         sensor_msgs::ImageConstPtr simage = m.instantiate<sensor_msgs::Image>();
         if(simage!=NULL)
-            msgsync.imageCallback(simage);
+            msgsync.imageleftCallback(simage);
         bool bdata = msgsync.getRecentMsgs(imageMsg,vimuMsg);
 
         if(bdata)
