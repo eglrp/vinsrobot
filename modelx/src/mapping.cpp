@@ -1,5 +1,6 @@
 /*****************************
  * VIO used in mapping and locate.
+ * Stereo-VIO is more complicated and unstable than mono-VIO,but it's effect is better.
 *****************************/
 #include<iostream>
 #include<algorithm>
