@@ -1,3 +1,6 @@
+/*****************************
+ * VIO used in mapping and locate.
+*****************************/
 #include<iostream>
 #include<algorithm>
 #include<fstream>
