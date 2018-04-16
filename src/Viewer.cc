@@ -20,8 +20,11 @@
 
 #include "Viewer.h"
 #include <pangolin/pangolin.h>
-
+#include <sstream>
 #include <mutex>
+#include <boost/thread/mutex.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
 
 namespace ORB_SLAM2
 {

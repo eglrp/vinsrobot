@@ -33,7 +33,7 @@ ConfigParam::ConfigParam(std::string configfile)
     std::cout<<"open rosbag: "<<_bagfile<<std::endl;
     fSettings["imutopic"] >> _imuTopic;
     fSettings["imagelefttopic"] >> _imageLeftTopic;
-    fSettings["imagerighttopic"] >> _imageRightTopic;s
+    fSettings["imagerighttopic"] >> _imageRightTopic;
     std::cout<<"imu topic: "<<_imuTopic<<std::endl;
     std::cout<<"imageleft topic: "<<_imageLeftTopic<<std::endl;
     std::cout<<"imageright topic: "<<_imageRightTopic<<std::endl;

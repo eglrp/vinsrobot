@@ -1,6 +1,8 @@
 /*****************************
  * VIO used in mapping and locate.
  * Stereo-VIO is more complicated and unstable than mono-VIO,but it's effect is better.
+ * Use stereo's depth information to improve accuracy of estimatation.
+ * TODO:to compare pnp and icp. 2018-4-12.
 *****************************/
 #include<iostream>
 #include<algorithm>

@@ -412,31 +412,30 @@ void System::Shutdown()
     pangolin::BindToContext("ORB-SLAM2: Map Viewer");
 }
 
-void System::LoadMap(const string &filename)
-{
-    {
-        std::ifstream is(filename);
+//void System::LoadMap(const string &filename)
+//{
+//    {
+//        std::ifstream is(filename);
 
-        boost::archive::binary_iarchive ia(is, boost::archive::no_header);
-        //ia >> mpKeyFrameDatabase;
-        ia >> mpMap;
-    }
+//        boost::archive::binary_iarchive ia(is, boost::archive::no_header);
+//        //ia >> mpKeyFrameDatabase;
+//        ia >> mpMap;
+//    }
 
-    cout << endl << filename <<" : Map Loaded!" << endl;
-}
+//    cout << endl << filename <<" : Map Loaded!" << endl;
+//}
 
-void System::LoadMap(const string &filename)
-{
-    {
-        std::ifstream is(filename);
+//void System::SaveMap(const string &filename)
+//{
+//    std::ofstream os(filename);
+//    {
+//        ::boost::archive::binary_oarchive oa(os, ::boost::archive::no_header);
+//        //oa << mpKeyFrameDatabase;
+//        oa << mpMap;
+//    }
+//    cout << endl << "Map saved to " << filename << endl;
+//}
 
-        boost::archive::binary_iarchive ia(is, boost::archive::no_header);
-        //ia >> mpKeyFrameDatabase;
-        ia >> mpMap;
-    }
-
-    cout << endl << filename <<" : Map Loaded!" << endl;
-}
 void System::SaveTrajectoryTUM(const string &filename)
 {
     cout << endl << "Saving camera trajectory to " << filename << " ..." << endl;

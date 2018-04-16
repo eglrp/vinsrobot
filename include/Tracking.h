@@ -74,6 +74,7 @@ public:
 
     ConfigParam* mpParams;
     cv::Mat GrabImageMonoVI(const cv::Mat &im, const std::vector<IMUData> &vimu, const double &timestamp);
+    cv::Mat GrabImageStereoVI(const cv::Mat &imLeft, const cv::Mat &imRight, const std::vector<IMUData> &vimu, const double &timestamp);
     // IMU Data since last KF. Append when new data is provided
     // Should be cleared in 1. initialization beginning, 2. new keyframe created.
     std::vector<IMUData> mvIMUSinceLastKF;
@@ -123,6 +124,7 @@ public:
     // Current Frame
     Frame mCurrentFrame;
     cv::Mat mImGray;
+    cv::Mat imGrayRight;
 
     // Initialization Variables (Monocular)
     std::vector<int> mvIniLastMatches;
