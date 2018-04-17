@@ -26,13 +26,6 @@
 #include<thread>
 #include<opencv2/core/core.hpp>
 
-// For map reuse
-#include <boost/serialization/serialization.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/serialization/list.hpp>
-#include <boost/serialization/vector.hpp>
-
 #include "Tracking.h"
 #include "FrameDrawer.h"
 #include "MapDrawer.h"
@@ -43,7 +36,7 @@
 #include "ORBVocabulary.h"
 #include "Viewer.h"
 
-#include "../src/IMU/imudata.h"
+#include "IMU/imudata.h"
 
 namespace ORB_SLAM2
 {
@@ -70,8 +63,6 @@ public:
     };
 
 public:
-    // Enable serialization
-    friend class boost::serialization::access;
 
     // Initialize the SLAM system. It launches the Local Mapping, Loop Closing and Viewer threads.
     System(const string &strVocFile, const string &strSettingsFile, const eSensor sensor, const bool bUseViewer = true);
@@ -105,10 +96,6 @@ public:
     // It waits until all threads have finished.
     // This function must be called before saving the trajectory.
     void Shutdown();
-
-    // Save / Load the current map
-    void SaveMap(const string &filename);
-    void LoadMap(const string &filename);
 
     // Save camera trajectory in the TUM RGB-D dataset format.
     // Only for stereo and RGB-D. This method does not work for monocular.
@@ -169,8 +156,6 @@ private:
     std::thread* mptLocalMapping;
     std::thread* mptLoopClosing;
     std::thread* mptViewer;
-
-    std::thread* mptLocalMappingVIOInit;
 
     // Reset flag
     std::mutex mMutexReset;

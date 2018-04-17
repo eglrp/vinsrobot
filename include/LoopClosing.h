@@ -31,9 +31,9 @@
 
 #include <thread>
 #include <mutex>
-#include "../Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h"
+#include "Thirdparty/g2o/g2o/types/types_seven_dof_expmap.h"
 
-#include "../src/IMU/configparam.h"
+#include "IMU/configparam.h"
 
 namespace ORB_SLAM2
 {

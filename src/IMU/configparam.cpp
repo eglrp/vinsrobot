@@ -27,7 +27,7 @@ ConfigParam::ConfigParam(std::string configfile)
     std::cout<<"Discart time in test data: "<<_testDiscardTime<<std::endl;
 
     fSettings["test.InitVIOTmpPath"] >> _tmpFilePath;
-    std::cout<<"save tmp file in "<<_tmpFilePath<<std::endl;
+    std::cout<<"save tmp file in "<< _tmpFilePath <<std::endl;
 
     fSettings["bagfile"] >> _bagfile;
     std::cout<<"open rosbag: "<<_bagfile<<std::endl;

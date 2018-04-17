@@ -21,17 +21,19 @@ find_package(catkin REQUIRED COMPONENTS
     rosbag
     image_transport
     )
+INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
+
+find_package(Eigen3 REQUIRED)
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
+)
 
 find_package(OpenCV REQUIRED)
-find_package(Eigen3 REQUIRED)
 find_package(Pangolin REQUIRED)
 find_package(Cholmod REQUIRED)
-#find_package(Ceres REQUIRED)
-
-# Describe catkin Project
-catkin_package()
-
 # Include dirs
+INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(include
   ${PROJECT_SOURCE_DIR}/
   ${PROJECT_SOURCE_DIR}/../
@@ -39,14 +41,17 @@ INCLUDE_DIRECTORIES(include
   ${PROJECT_SOURCE_DIR}/../src/IMU
   ${PROJECT_SOURCE_DIR}/../include
   ${PROJECT_SOURCE_DIR}/src/MsgSync/
+  ${EIGEN3_INCLUDE_DIR}
   ${Pangolin_INCLUDE_DIRS}
   ${CHOLMOD_INCLUDE_DIR}
 )
 
-INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS})
-LIST(APPEND LINK_LIBS ${catkin_LIBRARIES})
 
-LINK_DIRECTORIES(#LIBS
+
+# Describe catkin Project
+catkin_package()
+
+set(LIBS
     ${OpenCV_LIBS}
     ${EIGEN3_LIBS}
     ${Pangolin_LIBRARIES}
@@ -89,6 +94,18 @@ set(SRC_FILES
     ${PROJECT_SOURCE_DIR}/src/MsgSync/MsgSynchronizer.cpp
 )
 
+add_executable(ros_vio
+    src/ros_vio.cc
+    ${SRC_FILES}
+    )
+target_link_libraries( ros_vio ${catkin_LIBRARIES} ${LIBS} )
+
+add_executable(ros_stereo
+    src/ros_stereo.cc
+    ${SRC_FILES}
+    )
+target_link_libraries(ros_stereo ${catkin_LIBRARIES} ${LIBS} )
+
 #add_executable(mapping
 #src/mapping.cpp
 #${SRC_FILES}
@@ -99,11 +116,11 @@ set(SRC_FILES
 #)
 
 #Node for monocular camera
-add_executable(ros_mono_vio
-src/ros_mono_vio.cpp
-${SRC_FILES}
-)
-target_link_libraries(ros_mono_vio
-${catkin_LIBRARIES}
-#${LIBS}
-)
+#add_executable(ros_mono_vio
+#src/ros_mono_vio.cpp
+#${SRC_FILES}
+#)
+#target_link_libraries(ros_mono_vio
+#${catkin_LIBRARIES}
+##${LIBS}
+#)

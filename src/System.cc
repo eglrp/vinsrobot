@@ -83,14 +83,12 @@ void System::SaveKeyFrameTrajectoryNavState(const string &filename)
         Eigen::Vector3d dba = pKF->GetNavState().Get_dBias_Acc();
         f << setprecision(6) << pKF->mTimeStamp << setprecision(7) << " ";
         f << P(0) << " " << P(1) << " " << P(2) << " ";
-        f << q.x() << " " << q.y() << " " << q.z() << " " << q.w() << " ";
         f << V(0) << " " << V(1) << " " << V(2) << " ";
-        f << bg(0)+dbg(0) << " " << bg(1)+dbg(1) << " " << bg(2)+dbg(2) << " ";
-        f << ba(0)+dba(0) << " " << ba(1)+dba(1) << " " << ba(2)+dba(2) << " ";
-//        f << bg(0) << " " << bg(1) << " " << bg(2) << " ";
-//        f << ba(0) << " " << ba(1) << " " << ba(2) << " ";
-//        f << dbg(0) << " " << dbg(1) << " " << dbg(2) << " ";
-//        f << dba(0) << " " << dba(1) << " " << dba(2) << " ";
+        f << q.x() << " " << q.y() << " " << q.z() << " " << q.w() << " ";
+        f << bg(0) << " " << bg(1) << " " << bg(2) << " ";
+        f << ba(0) << " " << ba(1) << " " << ba(2) << " ";
+        f << dbg(0) << " " << dbg(1) << " " << dbg(2) << " ";
+        f << dba(0) << " " << dba(1) << " " << dba(2) << " ";
         f << endl;
     }
 
@@ -235,12 +233,6 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
 
     mpLoopCloser->SetTracker(mpTracker);
     mpLoopCloser->SetLocalMapper(mpLocalMapper);
-
-    if(ConfigParam::GetRealTimeFlag())
-    {
-        //Thread for VINS initialization
-        mptLocalMappingVIOInit = new thread(&ORB_SLAM2::LocalMapping::VINSInitThread,mpLocalMapper);
-    }
 }
 
 cv::Mat System::TrackStereo(const cv::Mat &imLeft, const cv::Mat &imRight, const double &timestamp)
@@ -411,30 +403,6 @@ void System::Shutdown()
 
     pangolin::BindToContext("ORB-SLAM2: Map Viewer");
 }
-
-//void System::LoadMap(const string &filename)
-//{
-//    {
-//        std::ifstream is(filename);
-
-//        boost::archive::binary_iarchive ia(is, boost::archive::no_header);
-//        //ia >> mpKeyFrameDatabase;
-//        ia >> mpMap;
-//    }
-
-//    cout << endl << filename <<" : Map Loaded!" << endl;
-//}
-
-//void System::SaveMap(const string &filename)
-//{
-//    std::ofstream os(filename);
-//    {
-//        ::boost::archive::binary_oarchive oa(os, ::boost::archive::no_header);
-//        //oa << mpKeyFrameDatabase;
-//        oa << mpMap;
-//    }
-//    cout << endl << "Map saved to " << filename << endl;
-//}
 
 void System::SaveTrajectoryTUM(const string &filename)
 {
