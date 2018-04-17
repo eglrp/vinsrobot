@@ -29,12 +29,12 @@
 
 #include<opencv2/core/core.hpp>
 
-#include"../../include/System.h"
+#include"../include/System.h"
 
 #include "MsgSync/MsgSynchronizer.h"
 
-#include "../../src/IMU/imudata.h"
-#include "../../src/IMU/configparam.h"
+#include "../src/IMU/imudata.h"
+#include "../src/IMU/configparam.h"
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
 
