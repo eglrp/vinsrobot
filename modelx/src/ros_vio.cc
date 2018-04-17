@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 
     if(argc != 3)
     {
-        cerr << endl << "Usage: rosrun ORB_SLAM2 Mono path_to_vocabulary path_to_settings" << endl;
+        cerr << endl << "Usage: rosrun modelx ros_vio path_to_vocabulary path_to_settings" << endl;
         ros::shutdown();
         return 1;
     }
