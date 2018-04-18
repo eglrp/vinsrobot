@@ -112,6 +112,7 @@ add_library(${PROJECT_NAME} SHARED
 target_link_libraries( ${PROJECT_NAME}
     ${OpenCV_LIBS}
     ${Pangolin_LIBRARIES}
+    cholmod
     ${PROJECT_SOURCE_DIR}/../Thirdparty/DBoW2/lib/libDBoW2.so
     ${PROJECT_SOURCE_DIR}/../Thirdparty/g2o/lib/libg2o.so
     ${PROJECT_SOURCE_DIR}/../lib/libORB_SLAM2.so
@@ -122,10 +123,10 @@ target_link_libraries( ${PROJECT_NAME}
 # Describe catkin Project
 #catkin_package()
 catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
-    CATKIN_DEPENDS roscpp nodelet
-    DEPENDS eigen opencv pagolin cholmod
+#    INCLUDE_DIRS include
+#    LIBRARIES ${PROJECT_NAME}
+#    CATKIN_DEPENDS roscpp nodelet
+#    DEPENDS eigen opencv pagolin cholmod
     )
 
 add_executable(ros_vio
